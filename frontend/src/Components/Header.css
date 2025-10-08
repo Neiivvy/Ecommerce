@@ -1,0 +1,59 @@
+.header {
+  background-color: hsl(174, 29%, 47%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.left-section .logo {
+  height: 40px;
+}
+
+.middle-section {
+  flex: 1;
+  margin: 0 20px;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+}
+
+.right-section {
+  display: flex;
+  gap: 15px; /* space between links */
+}
+
+.header-item {
+  display: flex;
+  align-items: center;
+  background-color:white;
+  color: black;
+  padding: 11px 17px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  gap: 16px; /* space between icon and text */
+}
+
+.header-item:hover {
+  background-color: #bbb;
+}
+
+.header-item .icon {
+  width: 18px;
+  height: 18px;
+}

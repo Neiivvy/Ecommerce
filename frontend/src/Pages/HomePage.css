@@ -1,0 +1,13 @@
+*{
+  margin: 0px;
+}
+.page-container {
+  display: block;
+}
+
+.content {
+  padding: 80px 20px 60px; /* leave space for header/footer */
+  min-height: 80vh;
+  background-color: #d7d7d7; /* pink background */
+  text-align: center;
+}
