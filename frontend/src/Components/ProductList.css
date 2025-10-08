@@ -1,0 +1,21 @@
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+  margin-top:60px;
+}
+
+/* Empty state styling */
+.product-list.empty {
+  display: flex;               /* center the message */
+  justify-content: center;
+  align-items: center;
+  height: 200px;               /* give some vertical space */
+}
+
+.no-products {
+  font-size: 1.2rem;
+  color: #555;
+  text-align: center;
+}
