@@ -12,6 +12,7 @@ export function Header() {
       <div className="left-section">
         <Link to="/" className="header-link">
           <img className="logo" src="images/logo-white.png" alt="Logo" />
+            <span className="logo-text">EKET</span>
         </Link>
       </div>
 
