@@ -1,28 +1,75 @@
-// src/Pages/CartPage.jsx
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Link } from "react-router-dom";
+import { ToastContext } from "../context/ToastContext";
+import { useNavigate } from "react-router-dom";
+import "./CartPage.css";
 
 export function CartPage() {
-  const { user } = useContext(AuthContext);
+  const { cart, setCart, user } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
+  const navigate = useNavigate();
 
   if (!user) {
-    return <p>Please log in to see your cart.</p>;
+    navigate("/login");
+    return null;
   }
 
+  const handleRemove = (id) => {
+    const removedItem = cart.find((item) => item.id === id);
+    setCart(cart.filter((item) => item.id !== id));
+    showToast(`${removedItem.name} removed from cart`, "error");
+  };
+
+  const handlePlaceOrder = (id) => {
+    const orderedItem = cart.find((item) => item.id === id);
+    showToast(`Order placed for ${orderedItem.name}`, "success");
+    setCart(cart.filter((item) => item.id !== id));
+  };
+
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>{user.name}'s Cart</h1>
-      <p>This is where items added to your cart will appear.</p>
+    <div className="cart-page">
+      <h2 className="cart-title">{user.name}'s Shopping Cart 🛒</h2>
 
-      {/* Example placeholder */}
-      <div style={{ marginTop: "1rem" }}>
-        <p>No items yet. Add products from the homepage.</p>
-      </div>
+      {cart.length === 0 ? (
+        <p className="empty-cart">
+          Your cart is empty. Go to homepage and click “Add to Cart” on your preferred product.
+        </p>
+      ) : (
+        <div className="cart-items">
+          {cart.map((product) => (
+            <div key={product.id} className="cart-item">
+              <img
+                src={
+                  product.image
+                    ? `http://localhost:5000${product.image}`
+                    : "https://via.placeholder.com/100"
+                }
+                alt={product.name}
+                className="cart-item-image"
+              />
 
-      <Link to="/orders">
-        <button style={{ marginTop: "1rem" }}>Go to Orders</button>
-      </Link>
+              <div className="cart-item-info">
+                <h3>{product.name}</h3>
+                <p className="price-tag">₹{product.price}</p>
+                <div className="cart-item-buttons">
+                  <button
+                    className="remove-btn"
+                    onClick={() => handleRemove(product.id)}
+                  >
+                    Remove
+                  </button>
+                  <button
+                    className="order-btn"
+                    onClick={() => handlePlaceOrder(product.id)}
+                  >
+                    Place Order
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

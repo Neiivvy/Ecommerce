@@ -1,26 +1,34 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-
+import { ToastContext } from "../context/ToastContext";
 import "./ProductCard.css";
 
 export const ProductCard = ({ product }) => {
+  const navigate = useNavigate();
+  const { user, cart, setCart } = useContext(AuthContext);
+  const { showToast } = useContext(ToastContext);
+
   const imageSrc = product.image
     ? `http://localhost:5000${product.image}`
     : "https://via.placeholder.com/150";
 
-  const { user } = useContext(AuthContext); // get logged-in user
-  const navigate = useNavigate();
-
   const handleAddToCart = () => {
     if (!user) {
-      // Not logged in → redirect to login page
       navigate("/login");
       return;
     }
 
-    console.log(`Added to cart: ${product.name}`);
+    const exists = cart.find((item) => item.id === product.id);
+    if (!exists) {
+      setCart([...cart, product]);
+      showToast(`${product.name} added to cart!`, "success");
+    } else {
+      showToast(`${product.name} is already in cart!`, "info");
+    }
   };
+
+  const inCart = cart.some((item) => item.id === product.id);
 
   return (
     <div className="product-card">
@@ -40,9 +48,9 @@ export const ProductCard = ({ product }) => {
         <button
           className="add-to-cart-btn"
           onClick={handleAddToCart}
-          disabled={product.stock === 0}
+          disabled={product.stock === 0 || inCart}
         >
-          Add to Cart
+          {inCart ? "Added to Cart" : "Add to Cart"}
         </button>
       </div>
     </div>
