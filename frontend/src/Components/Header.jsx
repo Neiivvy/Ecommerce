@@ -1,40 +1,78 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import "./header.css";
 
-// Placeholder icons (can replace with actual images)
 import userIcon from "../assets/user-icon.png";
 import ordersIcon from "../assets/orders-icon.png";
 import cartIcon from "../assets/cart-icon.png";
 
 export function Header() {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // Redirect to login if user is not logged in
+  const handleProtectedClick = (path) => {
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate(path);
+    }
+  };
+
   return (
     <div className="header">
       <div className="left-section">
         <Link to="/" className="header-link">
           <img className="logo" src="images/logo-white.png" alt="Logo" />
-            <span className="logo-text">EKET</span>
+          <span className="logo-text">EKET</span>
         </Link>
       </div>
 
       <div className="middle-section">
-        <input className="search-bar" type="text" placeholder="Search products..." />
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Search products..."
+        />
       </div>
 
       <div className="right-section">
-        <Link className="header-item" to="/login">
-          <img src={userIcon} className="icon" alt="Login" />
-          Login / Sign Up
-        </Link>
+        {user ? (
+          <>
+          <Link className="header-item" to="/">
+            <span className="header-item">Hello, {user.name}
+               <img src={userIcon} className="icon" alt="Login" />
+            </span>
+               </Link>
+            <button className="header-item logout-btn" onClick={logout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link className="header-item" to="/login">
+            <img src={userIcon} className="icon" alt="Login" />
+            Login / Sign Up
+          </Link>
+        )}
 
-        <Link className="header-item" to="/orders">
+        {/* Orders link */}
+        <span
+          className="header-item clickable"
+          onClick={() => handleProtectedClick("/orders")}
+        >
           <img src={ordersIcon} className="icon" alt="Orders" />
           Orders
-        </Link>
+        </span>
 
-        <Link className="header-item" to="/checkout">
+        {/* Cart link */}
+        <span
+          className="header-item clickable"
+          onClick={() => handleProtectedClick("/cart")}
+        >
           <img src={cartIcon} className="icon" alt="Cart" />
           Cart
-        </Link>
+        </span>
       </div>
     </div>
   );

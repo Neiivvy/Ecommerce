@@ -16,6 +16,16 @@ app.use("/images/ratings", express.static("public/images/ratings"));
 const productRoutes = require("./routes/product");
 app.use("/products", productRoutes);
 
+//Import user routes 
+const userRoutes = require("./routes/user");
+app.use("/api/users", userRoutes);
+
+//authroutes in server.js
+const authRoutes = require("./routes/auth");
+app.use("/auth", authRoutes);
+
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

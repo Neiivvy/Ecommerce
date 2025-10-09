@@ -57,15 +57,18 @@
   align-items: center;
   background-color:white;
   color: black;
-  padding: 11px 17px;
+  padding: 4px 17px;
   border-radius: 10px;
   text-decoration: none;
   font-weight: 500;
-  gap: 16px; /* space between icon and text */
+  gap: 11px; /* space between icon and text */
+  cursor: pointer;
+
 }
 
 .header-item:hover {
   background-color: #bbb;
+  
 }
 
 .header-item .icon {
