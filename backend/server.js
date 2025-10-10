@@ -25,6 +25,10 @@ const authRoutes = require("./routes/auth");
 app.use("/auth", authRoutes);
 
 
+//cart routes
+const cartRoutes = require("./routes/cart");
+app.use("/cart", cartRoutes);
+
 
 // Start server
 app.listen(PORT, () => {

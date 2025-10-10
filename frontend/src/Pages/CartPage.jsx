@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "./CartPage.css";
 
 export function CartPage() {
-  const { cart, setCart, user } = useContext(AuthContext);
+  const { cart, user, removeFromCart } = useContext(AuthContext);
   const { showToast } = useContext(ToastContext);
   const navigate = useNavigate();
 
@@ -14,16 +14,14 @@ export function CartPage() {
     return null;
   }
 
-  const handleRemove = (id) => {
-    const removedItem = cart.find((item) => item.id === id);
-    setCart(cart.filter((item) => item.id !== id));
+  const handleRemove = async (productId) => {
+    await removeFromCart(productId);
+    const removedItem = cart.find((item) => item.id === productId);
     showToast(`${removedItem.name} removed from cart`, "error");
   };
 
-  const handlePlaceOrder = (id) => {
-    const orderedItem = cart.find((item) => item.id === id);
-    showToast(`Order placed for ${orderedItem.name}`, "success");
-    setCart(cart.filter((item) => item.id !== id));
+  const handlePlaceOrder = (product) => {
+    navigate("/checkout", { state: { product } });
   };
 
   return (
@@ -47,7 +45,6 @@ export function CartPage() {
                 alt={product.name}
                 className="cart-item-image"
               />
-
               <div className="cart-item-info">
                 <h3>{product.name}</h3>
                 <p className="price-tag">₹{product.price}</p>
@@ -60,7 +57,7 @@ export function CartPage() {
                   </button>
                   <button
                     className="order-btn"
-                    onClick={() => handlePlaceOrder(product.id)}
+                    onClick={() => handlePlaceOrder(product)}
                   >
                     Place Order
                   </button>

@@ -85,23 +85,25 @@
 }
 
 .remove-btn {
-    background-color: #d49090;
-  color:black;
+   background-color: #a41111;
+  color: white;
+
  
 }
 
 .remove-btn:hover {
- background-color: #a41111;
-  color: white;
+    background-color: #d49090;
+  color:black;
 }
 
 .order-btn {
-   background-color: #8dd299;
-  color:black;
+    background-color: #17831e;
+  color: white;
+ 
  
 }
 
 .order-btn:hover {
-  background-color: #17831e;
-  color: white;
+  background-color: #8dd299;
+  color:black;
 }

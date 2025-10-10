@@ -6,14 +6,14 @@ import "./ProductCard.css";
 
 export const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  const { user, cart, setCart } = useContext(AuthContext);
+  const { user, cart, addToCart } = useContext(AuthContext);
   const { showToast } = useContext(ToastContext);
 
   const imageSrc = product.image
     ? `http://localhost:5000${product.image}`
     : "https://via.placeholder.com/150";
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!user) {
       navigate("/login");
       return;
@@ -21,7 +21,7 @@ export const ProductCard = ({ product }) => {
 
     const exists = cart.find((item) => item.id === product.id);
     if (!exists) {
-      setCart([...cart, product]);
+      await addToCart(product);
       showToast(`${product.name} added to cart!`, "success");
     } else {
       showToast(`${product.name} is already in cart!`, "info");
@@ -33,7 +33,6 @@ export const ProductCard = ({ product }) => {
   return (
     <div className="product-card">
       <img src={imageSrc} alt={product.name} className="product-image" />
-
       <div className="product-info">
         <h3 className="product-name">{product.name}</h3>
         <p className="product-description">{product.description}</p>
