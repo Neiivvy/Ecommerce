@@ -23,7 +23,7 @@ export function CheckoutPage() {
   };
 
   const deliveryFee = 150;
-  const total = product ? product.price + deliveryFee : 0;
+  const total = product ? (+product.price + deliveryFee).toFixed(2) : "0.00";
 
   return (
     <div className="checkout-container">
@@ -54,14 +54,14 @@ export function CheckoutPage() {
               }
               alt={product.name}
             />
-            <div>
-              <p>{product.name}</p>
-              <p>Price: ₹{product.price}</p>
+            <div className="summary-info">
+              <p className="summary-name">{product.name}</p>
+              <p className="summary-price">Price: ₹{(+product.price).toFixed(2)}</p>
             </div>
           </div>
 
           <div className="summary-details">
-            <p>Delivery Fee: ₹{deliveryFee}</p>
+            <p>Delivery Fee: ₹{deliveryFee.toFixed(2)}</p>
             <h4>Total: ₹{total}</h4>
           </div>
 

@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext } from "react"; 
 import { AuthContext } from "../context/AuthContext";
 import { ToastContext } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
+
 import "./CartPage.css";
 
 export function CartPage() {
@@ -9,17 +10,21 @@ export function CartPage() {
   const { showToast } = useContext(ToastContext);
   const navigate = useNavigate();
 
+  // Redirect if not logged in
   if (!user) {
     navigate("/login");
     return null;
   }
 
+  // Remove item from cart (state + DB handled inside context)
   const handleRemove = async (productId) => {
-    await removeFromCart(productId);
+    // Find item name before removing for toast
     const removedItem = cart.find((item) => item.id === productId);
-    showToast(`${removedItem.name} removed from cart`, "error");
+    await removeFromCart(productId);
+    if (removedItem) showToast(`${removedItem.name} removed from cart`, "error");
   };
 
+  // Place order: navigate to checkout page with cart item info
   const handlePlaceOrder = (product) => {
     navigate("/checkout", { state: { product } });
   };
@@ -59,7 +64,7 @@ export function CartPage() {
                     className="order-btn"
                     onClick={() => handlePlaceOrder(product)}
                   >
-                    Place Order
+                    Buy Now
                   </button>
                 </div>
               </div>
