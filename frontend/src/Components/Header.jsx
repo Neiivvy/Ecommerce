@@ -7,11 +7,10 @@ import userIcon from "../assets/user-icon.png";
 import ordersIcon from "../assets/orders-icon.png";
 import cartIcon from "../assets/cart-icon.png";
 
-export function Header() {
+export function Header({ searchTerm, setSearchTerm }) {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Redirect to login if user is not logged in
   const handleProtectedClick = (path) => {
     if (!user) {
       navigate("/login");
@@ -34,17 +33,20 @@ export function Header() {
           className="search-bar"
           type="text"
           placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       <div className="right-section">
         {user ? (
           <>
-          <Link className="header-item" to="/">
-            <span className="header-item">Hello, {user.name}
-               <img src={userIcon} className="icon" alt="Login" />
-            </span>
-               </Link>
+            <Link className="header-item" to="/">
+              <span className="header-item">
+                Hello, {user.name}
+                <img src={userIcon} className="icon" alt="Login" />
+              </span>
+            </Link>
             <button className="header-item logout-btn" onClick={logout}>
               Logout
             </button>
@@ -56,7 +58,6 @@ export function Header() {
           </Link>
         )}
 
-        {/* Orders link */}
         <span
           className="header-item clickable"
           onClick={() => handleProtectedClick("/orders")}
@@ -65,7 +66,6 @@ export function Header() {
           Orders
         </span>
 
-        {/* Cart link */}
         <span
           className="header-item clickable"
           onClick={() => handleProtectedClick("/cart")}

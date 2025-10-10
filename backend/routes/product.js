@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/db"); // make sure you export your MySQL connection from db.js
+const { searchProducts } = require('../controllers/productController');
+//search routes
+router.get('/search', searchProducts);
 
 // GET all products
 router.get("/", (req, res) => {
@@ -9,5 +12,6 @@ router.get("/", (req, res) => {
     res.json(results);
   });
 });
+
 
 module.exports = router;
