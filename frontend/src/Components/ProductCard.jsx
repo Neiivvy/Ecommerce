@@ -4,14 +4,16 @@ import { AuthContext } from "../context/AuthContext";
 import { ToastContext } from "../context/ToastContext";
 import "./ProductCard.css";
 
-export const ProductCard = ({ product }) => {
+export const ProductCard = ({ product, cart }) => {
   const navigate = useNavigate();
-  const { user, cart, addToCart } = useContext(AuthContext);
+  const { user, addToCart } = useContext(AuthContext);
   const { showToast } = useContext(ToastContext);
 
   const imageSrc = product.image
     ? `http://localhost:5000${product.image}`
     : "https://via.placeholder.com/150";
+
+  const inCart = cart.some((item) => item.productId === product.id); // check cart
 
   const handleAddToCart = async () => {
     if (!user) {
@@ -19,16 +21,13 @@ export const ProductCard = ({ product }) => {
       return;
     }
 
-    const exists = cart.find((item) => item.id === product.id);
-    if (!exists) {
+    if (!inCart) {
       await addToCart(product);
       showToast(`${product.name} added to cart!`, "success");
     } else {
       showToast(`${product.name} is already in cart!`, "info");
     }
   };
-
-  const inCart = cart.some((item) => item.id === product.id);
 
   return (
     <div className="product-card">

@@ -120,11 +120,9 @@ export function LoginPage() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      setSuccessMessage(isSignup ? "Signup successful!" : "Login successful!");
+   setSuccessMessage(isSignup ? "Signup successful!" : "Login successful!");
+navigate("/");
 
-      setTimeout(() => {
-        navigate("/");
-      }, 800);
     } catch (err) {
       console.error(err);
       if (isSignup) setSignupErrors({ general: "Network error" });

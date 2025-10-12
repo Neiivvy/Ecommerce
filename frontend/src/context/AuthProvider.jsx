@@ -4,82 +4,96 @@ import { AuthContext } from "./AuthContext";
 import axios from "axios";
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);   // stores user info
-  const [token, setToken] = useState(null); // stores JWT token
-  const [cart, setCart] = useState([]);     // stores current user's cart
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [loadingCart, setLoadingCart] = useState(false);
 
-  // On initial load, check localStorage for token/user
+  // Load token and user on startup
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
-
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
     }
   }, []);
 
-  // Fetch cart from DB whenever user logs in / changes
+  // Fetch cart when user logs in
   useEffect(() => {
-    const fetchCartFromDB = async () => {
-      if (!user) return;
+    if (!user) return;
 
+    const fetchCart = async () => {
+      setLoadingCart(true);
       try {
-        const response = await axios.get(`http://localhost:5000/cart/${user.id}`);
-        setCart(response.data);
-      } catch (error) {
-        console.error("Failed to fetch cart", error);
+        const res = await axios.get(`http://localhost:5000/cart/${user.id}`);
+        const cartWithIds = res.data.map((item) => ({
+          cartId: item.id,
+          productId: item.productId || item.id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          quantity: item.quantity,
+        }));
+        setCart(cartWithIds);
+      } catch (err) {
+        console.error("Failed to fetch cart:", err);
+      } finally {
+        setLoadingCart(false);
       }
     };
 
-    fetchCartFromDB();
+    fetchCart();
   }, [user]);
 
-  // Add item to cart (state + DB)
+  // Add to cart
   const addToCart = async (product) => {
     if (!user) return;
 
-    try {
-      // Check if product already in cart
-      const exists = cart.find((item) => item.id === product.id);
-      if (exists) return;
+    const exists = cart.some((item) => item.productId === product.id);
+    if (exists) return;
 
-      // Add to DB
-      await axios.post("http://localhost:5000/cart", {
+    try {
+      const res = await axios.post("http://localhost:5000/cart", {
         userId: user.id,
         productId: product.id,
         quantity: 1,
       });
 
-      // Add to state
-      setCart((prev) => [...prev, product]);
-    } catch (error) {
-      console.error("Failed to add to cart", error);
+      const newCartItem = {
+        cartId: res.data.cartId,
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+      };
+
+      setCart((prev) => [...prev, newCartItem]);
+    } catch (err) {
+      console.error("Failed to add to cart", err);
     }
   };
 
-  // Remove item from cart (state + DB)
+  // Remove from cart
   const removeFromCart = async (productId) => {
     if (!user) return;
 
+    const cartItem = cart.find((item) => item.productId === productId);
+    if (!cartItem) return;
+
     try {
-      // Find cart item ID from DB response (you may need cart table ID)
-      const cartItem = cart.find((item) => item.id === productId);
-      if (!cartItem) return;
-
-      await axios.delete(`http://localhost:5000/cart/${cartItem.cartId || cartItem.id}`);
-
-      // Remove from state
-      setCart((prev) => prev.filter((item) => item.id !== productId));
-    } catch (error) {
-      console.error("Failed to remove from cart", error);
+      await axios.delete(`http://localhost:5000/cart/${cartItem.cartId}`);
+      setCart((prev) => prev.filter((item) => item.productId !== productId));
+    } catch (err) {
+      console.error("Failed to remove from cart", err);
     }
   };
 
-  // Logout function
+  // Logout
   const logout = () => {
-    setToken(null);
     setUser(null);
+    setToken(null);
     setCart([]);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -94,12 +108,18 @@ export const AuthProvider = ({ children }) => {
         setToken,
         logout,
         cart,
-        setCart,
         addToCart,
         removeFromCart,
+        loadingCart,
       }}
     >
-      {children}
+      {loadingCart ? (
+        <div style={{ textAlign: "center", marginTop: "2rem" }}>
+          Loading your cart...
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };
