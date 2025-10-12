@@ -8,13 +8,25 @@ export const SignupForm = () => {
   const [errors, setErrors] = useState({});
 
   const validate = () => {
-    const newErrors = {};
-    if (!name) newErrors.name = "Name is required";
-    if (!email) newErrors.email = "Email is required";
-    if (!password) newErrors.password = "Password is required";
-    if (password !== confirmPassword) newErrors.confirmPassword = "Passwords do not match";
-    return newErrors;
-  };
+  const newErrors = {};
+  
+  if (!name) newErrors.name = "Name is required";
+  else if (name.trim().length < 3) newErrors.name = "Name must be at least 3 letters";
+
+  if (!email) newErrors.email = "Email is required";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    newErrors.email = "Invalid email format";
+
+  if (!password) newErrors.password = "Password is required";
+  else if (password.length < 7)
+    newErrors.password = "Password must be at least 7 characters";
+
+  if (password !== confirmPassword)
+    newErrors.confirmPassword = "Passwords do not match";
+
+  return newErrors;
+};
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

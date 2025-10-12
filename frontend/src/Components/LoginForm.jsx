@@ -5,12 +5,16 @@ export const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
 
-  const validate = () => {
-    const newErrors = {};
-    if (!email) newErrors.email = "Email is required";
-    if (!password) newErrors.password = "Password is required";
-    return newErrors;
-  };
+ const validate = () => {
+  const newErrors = {};
+  if (!email) newErrors.email = "Email is required";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    newErrors.email = "Invalid email format";
+
+  if (!password) newErrors.password = "Password is required";
+  return newErrors;
+};
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
