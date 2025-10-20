@@ -38,12 +38,17 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
-  transition: border 0.2s;
+  transition: border 0.2s, background-color 0.2s;
 }
 
 .checkout-form input:focus {
   border-color: #0066cc;
   outline: none;
+}
+
+.checkout-form input.disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
 }
 
 .save-btn {
@@ -86,7 +91,7 @@
   object-fit: cover;
 }
 
-.summary-text {
+.summary-info {
   display: flex;
   flex-direction: column;
   gap: 4px;
