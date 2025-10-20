@@ -8,7 +8,7 @@ import ordersIcon from "../assets/orders-icon.png";
 import cartIcon from "../assets/cart-icon.png";
 
 export function Header({ searchTerm, setSearchTerm }) {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, cartCount } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleProtectedClick = (path) => {
@@ -43,8 +43,8 @@ export function Header({ searchTerm, setSearchTerm }) {
           <>
             <Link className="header-item" to="/">
               <span className="header-item">
+                <img src={userIcon} className="icon" alt="User" />
                 Hello, {user.name}
-                <img src={userIcon} className="icon" alt="Login" />
               </span>
             </Link>
             <button className="header-item logout-btn" onClick={logout}>
@@ -67,11 +67,15 @@ export function Header({ searchTerm, setSearchTerm }) {
         </span>
 
         <span
-          className="header-item clickable"
+          className="header-item clickable cart-link"
           onClick={() => handleProtectedClick("/cart")}
+          style={{ position: "relative" }}
         >
           <img src={cartIcon} className="icon" alt="Cart" />
           Cart
+          {user && cartCount > 0 && (
+            <span className="cart-badge">{cartCount}</span>
+          )}
         </span>
       </div>
     </div>

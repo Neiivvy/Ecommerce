@@ -18,6 +18,14 @@ const Cart = {
     );
   },
 
+   getCartCountByUser: (userId, callback) => {
+    db.query(
+      'SELECT COALESCE(SUM(quantity), 0) AS count FROM cart WHERE userId = ?',
+      [userId],
+      callback
+    );
+  },
+
   removeItem: (cartId, callback) => {
     db.query('DELETE FROM cart WHERE id = ?', [cartId], callback);
   }

@@ -3,7 +3,7 @@ import { HomePage } from "./Pages/HomePage";
 import { LoginPage } from "./Pages/LoginPage";
 import { OrdersPage } from "./Pages/OrdersPage";
 import { CartPage } from "./Pages/CartPage";
-import { CheckoutPage } from "./Pages/CheckoutPage"; // ✅ new
+import { CheckoutPage } from "./Pages/CheckoutPage";
 import { Header } from "./Components/Header";
 import { ToastProvider } from "./context/ToastProvider";
 import { AuthProvider } from "./context/AuthProvider";
@@ -14,7 +14,8 @@ function App() {
     <AuthProvider>
       <ToastProvider>
         <Router>
-          <Header />
+          {/* Header will now always have access to AuthContext */}
+          <Header searchTerm="" setSearchTerm={() => {}} />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />

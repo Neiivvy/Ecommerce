@@ -1,5 +1,4 @@
-// src/context/AuthProvider.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
 
@@ -21,7 +20,10 @@ export const AuthProvider = ({ children }) => {
 
   // Fetch cart when user logs in
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setCart([]);
+      return;
+    }
 
     const fetchCart = async () => {
       setLoadingCart(true);
@@ -38,6 +40,7 @@ export const AuthProvider = ({ children }) => {
         setCart(cartWithIds);
       } catch (err) {
         console.error("Failed to fetch cart:", err);
+        setCart([]);
       } finally {
         setLoadingCart(false);
       }
@@ -46,10 +49,14 @@ export const AuthProvider = ({ children }) => {
     fetchCart();
   }, [user]);
 
+  // Derived cartCount from cart array
+  const cartCount = useMemo(() => {
+    return cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+  }, [cart]);
+
   // Add to cart
   const addToCart = async (product) => {
     if (!user) return;
-
     const exists = cart.some((item) => item.productId === product.id);
     if (exists) return;
 
@@ -111,15 +118,10 @@ export const AuthProvider = ({ children }) => {
         addToCart,
         removeFromCart,
         loadingCart,
+        cartCount, // derived
       }}
     >
-      {loadingCart ? (
-        <div style={{ textAlign: "center", marginTop: "2rem" }}>
-          Loading your cart...
-        </div>
-      ) : (
-        children
-      )}
+      {children}
     </AuthContext.Provider>
   );
 };
