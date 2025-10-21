@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./CheckoutPage.css";
+import axios from "axios";
 
 export function CheckoutPage() {
   const { state } = useLocation();
@@ -25,6 +26,22 @@ export function CheckoutPage() {
   const deliveryFee = 150;
   const total = product ? (+product.price + deliveryFee).toFixed(2) : "0.00";
 
+  // ✅ Optional: keep a named function for clarity
+  const handlePayment = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/payments/create-checkout-session", {
+        product: product,
+        totalAmount: Number(total),
+      });
+
+      if (response.data.url) {
+        window.location.href = response.data.url; // Redirect to Stripe checkout
+      }
+    } catch (error) {
+      console.error("Payment failed", error);
+    }
+  };
+
   return (
     <div className="checkout-container">
       <div className="checkout-form">
@@ -47,11 +64,7 @@ export function CheckoutPage() {
           <h3>Order Summary</h3>
           <div className="summary-item">
             <img
-              src={
-                product.image
-                  ? `http://localhost:5000${product.image}`
-                  : "https://via.placeholder.com/100"
-              }
+              src={product.image ? `http://localhost:5000${product.image}` : "https://via.placeholder.com/100"}
               alt={product.name}
             />
             <div className="summary-info">
@@ -68,6 +81,7 @@ export function CheckoutPage() {
           <button
             className="proceed-btn"
             disabled={!allFilled}
+            onClick={handlePayment} // ✅ use the named function
           >
             Proceed to Pay
           </button>
