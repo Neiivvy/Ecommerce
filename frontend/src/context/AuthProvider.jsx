@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [cart, setCart] = useState([]);
   const [loadingCart, setLoadingCart] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
 
   // Load token and user on startup
   useEffect(() => {
@@ -16,6 +17,7 @@ export const AuthProvider = ({ children }) => {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
     }
+     setLoadingUser(false);
   }, []);
 
   // Fetch cart when user logs in
@@ -117,6 +119,7 @@ export const AuthProvider = ({ children }) => {
         cart,
         addToCart,
         removeFromCart,
+        loadingUser,
         loadingCart,
         cartCount, // derived
       }}
