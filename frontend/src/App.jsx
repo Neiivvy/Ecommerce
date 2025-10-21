@@ -4,6 +4,8 @@ import { LoginPage } from "./Pages/LoginPage";
 import { OrdersPage } from "./Pages/OrdersPage";
 import { CartPage } from "./Pages/CartPage";
 import { CheckoutPage } from "./Pages/CheckoutPage";
+import { SuccessPage } from "./Pages/SuccessPage";
+import { FailurePage } from "./Pages/FailurePage";
 import { Header } from "./Components/Header";
 import { ToastProvider } from "./context/ToastProvider";
 import { AuthProvider } from "./context/AuthProvider";
@@ -40,6 +42,23 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CheckoutPage />
+                </ProtectedRoute>
+              }
+            />
+            {/* Payment status pages */}
+            <Route
+              path="/payment-success"
+              element={
+                <ProtectedRoute>
+                  <SuccessPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment-failed"
+              element={
+                <ProtectedRoute>
+                  <FailurePage />
                 </ProtectedRoute>
               }
             />

@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import "./CheckoutPage.css";
 import axios from "axios";
 
+
 export function CheckoutPage() {
   const { state } = useLocation();
   const product = state?.product;
