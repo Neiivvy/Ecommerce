@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
-import "./CheckoutPage.css";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext"; // adjust path
+import "./CheckoutPage.css";
 
 export function CheckoutPage() {
   const { state } = useLocation();
   const product = state?.product;
+  const { user } = useContext(AuthContext); // ✅ get logged-in user
+console.log("Checkout product object:", product);
 
   const [formData, setFormData] = useState({
     fullname: "",
@@ -26,30 +29,30 @@ export function CheckoutPage() {
   const deliveryFee = 150;
   const total = product ? (Number(product.price) + deliveryFee).toFixed(2) : "0.00";
 
- const handlePayment = async () => {
-  if (!product || !allFilled || loading) return;
+  const handlePayment = async () => {
+    if (!product || !allFilled || loading || !user) return; // ❌ check user exists
 
-  setLoading(true);
-  try {
-    const response = await axios.post(
-      "http://localhost:5000/api/payments/create-checkout-session",
-      {
-        totalAmount: Number(total),
-        userId: "2",                   // ✅ hardcoded user ID for testing
-        productId: product.id || "1",  // ✅ send actual product ID, fallback to 1
-        productName: product.name || "Product", // ✅ for Stripe display
-        quantity: 1,                   // ✅ default quantity
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/payments/create-checkout-session",
+        {
+          totalAmount: Number(total),
+          userId: user.id,             // ✅ actual logged-in user
+          productId: product.productId,       // ✅ actual product
+          productName: product.name,   // ✅ for Stripe display
+          quantity: 1,
+        }
+      );
+
+      if (response.data.url) {
+        window.location.href = response.data.url;
       }
-    );
-
-    if (response.data.url) {
-      window.location.href = response.data.url;
+    } catch (error) {
+      console.error("Payment failed", error);
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Payment failed", error);
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="checkout-container">
@@ -86,11 +89,12 @@ export function CheckoutPage() {
 
           <button
             className="proceed-btn"
-            disabled={!allFilled || loading}
+            disabled={!allFilled || loading || !user} // ❌ disable if no user
             onClick={handlePayment}
           >
             {loading ? "Processing..." : "Proceed to Pay"}
           </button>
+          {!user && <p style={{ color: "red", marginTop: "0.5rem" }}>You must be logged in to checkout.</p>}
         </div>
       )}
     </div>
