@@ -40,7 +40,7 @@ console.log("Checkout product object:", product);
         {
           totalAmount: Number(total),
           userId: user.id,             // ✅ actual logged-in user
-          productId: product.productId,      // ✅ actual product
+          productId: product.productId || product.cartId,      // ✅ actual product
           productName: product.name,   // ✅ for Stripe display
           quantity: 1,
         }

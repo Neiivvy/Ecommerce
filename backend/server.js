@@ -37,7 +37,7 @@ app.use("/cart", cartRoutes);
 app.use("/api/payments", paymentRoutes);
 
 const orderRoutes = require("./routes/order");
-app.use("/orders", orderRoutes);
+app.use("/api/orders", orderRoutes);
 
 // ✅ Start server
 app.listen(PORT, () => {

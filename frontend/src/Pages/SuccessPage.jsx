@@ -7,12 +7,19 @@ export function SuccessPage() {
     <div className="success-container">
       <div className="success-box">
         <h2>Payment Successful 🎉</h2>
-        <p>Thank you for your order! Your payment has been processed successfully.</p>
+        <p>
+          Thank you for your order! Your payment has been processed
+          successfully.
+        </p>
         <div className="success-buttons">
           <Link to="/" className="proceed-btn">
             Go to Home
           </Link>
-          <Link to="/orders" className="orders-btn">
+          <Link
+            to="/orders"
+            className="orders-btn"
+            state={{ highlightLatest: true }}
+          >
             Go to Orders
           </Link>
         </div>

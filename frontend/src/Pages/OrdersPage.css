@@ -1,0 +1,86 @@
+.orders-container {
+  max-width: 900px;
+  margin: 2rem auto; /* change top margin to give space from navbar */
+  padding: 1rem;
+  padding-top: 4rem; /* extra top padding for navbar */
+  font-family: 'Arial', sans-serif;
+}
+
+.orders-container h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  background-color: #fdfdfd;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.status {
+  padding: 0.2rem 0.5rem;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.status.paid {
+  background-color: #28a745;
+}
+
+.status.pending {
+  background-color: #ffc107;
+}
+
+.status.cancelled {
+  background-color: #dc3545;
+}
+
+.order-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.order-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.order-details p {
+  margin: 0.2rem 0;
+}
+
+.not-logged-in,
+.loading,
+.no-orders {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  color: #666;
+}
