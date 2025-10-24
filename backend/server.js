@@ -1,21 +1,26 @@
-// ✅ Load environment variables first
 require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ Middleware
+// ✅ Middleware for normal routes
 app.use(cors());
-app.use(express.json());
 
 // ✅ Serve images
 app.use("/images/products", express.static("public/images/products"));
 app.use("/images/ratings", express.static("public/images/ratings"));
 
-// ✅ Import routes
+// ✅ Stripe webhook must come BEFORE express.json()
+const paymentRoutes = require("./routes/payment");
+// This raw middleware ONLY applies to the webhook route
+app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
+
+// ✅ Normal JSON parsing for all other routes
+app.use(express.json());
+
+// ✅ Import normal routes
 const productRoutes = require("./routes/product");
 app.use("/products", productRoutes);
 
@@ -28,7 +33,7 @@ app.use("/auth", authRoutes);
 const cartRoutes = require("./routes/cart");
 app.use("/cart", cartRoutes);
 
-const paymentRoutes = require("./routes/payment");
+// Payment & Order routes (excluding webhook)
 app.use("/api/payments", paymentRoutes);
 
 const orderRoutes = require("./routes/order");

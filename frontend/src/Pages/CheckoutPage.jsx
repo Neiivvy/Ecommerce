@@ -1,9 +1,7 @@
-// src/Pages/CheckoutPage.jsx
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./CheckoutPage.css";
 import axios from "axios";
-
 
 export function CheckoutPage() {
   const { state } = useLocation();
@@ -18,6 +16,7 @@ export function CheckoutPage() {
     area: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const allFilled = Object.values(formData).every((value) => value.trim() !== "");
 
   const handleChange = (e) => {
@@ -25,21 +24,30 @@ export function CheckoutPage() {
   };
 
   const deliveryFee = 150;
-  const total = product ? (+product.price + deliveryFee).toFixed(2) : "0.00";
+  const total = product ? (Number(product.price) + deliveryFee).toFixed(2) : "0.00";
 
-  // ✅ Optional: keep a named function for clarity
   const handlePayment = async () => {
+    if (!product || !allFilled || loading) return;
+
+    setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/api/payments/create-checkout-session", {
-        product: product,
-        totalAmount: Number(total),
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/payments/create-checkout-session",
+        {
+          product,
+          totalAmount: Number(total),
+          userId: "2",       // ✅ hardcoded user ID for testing
+          productId: "1",    // ✅ hardcoded product ID for testing
+          quantity: 1,
+        }
+      );
 
       if (response.data.url) {
-        window.location.href = response.data.url; // Redirect to Stripe checkout
+        window.location.href = response.data.url;
       }
     } catch (error) {
       console.error("Payment failed", error);
+      setLoading(false);
     }
   };
 
@@ -54,9 +62,6 @@ export function CheckoutPage() {
           <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
           <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
           <input type="text" name="area" placeholder="Area / Nearby Landmark" value={formData.area} onChange={handleChange} />
-          <button type="button" className="save-btn" disabled={!allFilled}>
-            Save & Continue
-          </button>
         </form>
       </div>
 
@@ -70,7 +75,7 @@ export function CheckoutPage() {
             />
             <div className="summary-info">
               <p className="summary-name">{product.name}</p>
-              <p className="summary-price">Price: ₹{(+product.price).toFixed(2)}</p>
+              <p className="summary-price">Price: ₹{Number(product.price).toFixed(2)}</p>
             </div>
           </div>
 
@@ -81,10 +86,10 @@ export function CheckoutPage() {
 
           <button
             className="proceed-btn"
-            disabled={!allFilled}
-            onClick={handlePayment} // ✅ use the named function
+            disabled={!allFilled || loading}
+            onClick={handlePayment}
           >
-            Proceed to Pay
+            {loading ? "Processing..." : "Proceed to Pay"}
           </button>
         </div>
       )}

@@ -1,14 +1,15 @@
-// routes/payment.js
-require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const Stripe = require("stripe");
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// ✅ Create Stripe Checkout Session (Frontend will call this)
+const Payment = require("../models/paymentModel");
+const Order = require("../models/orderModel");
+
+// Create Stripe Checkout Session
 router.post("/create-checkout-session", async (req, res) => {
   try {
-    const { product, totalAmount } = req.body;
+    const { product, totalAmount, userId, quantity } = req.body;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -16,24 +17,95 @@ router.post("/create-checkout-session", async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "usd", // Stripe test uses USD (works globally in test mode)
-            product_data: {
-              name: product.name,
-            },
-            unit_amount: Math.round(totalAmount * 100), // Stripe accepts cents
+            currency: "usd",
+            product_data: { name: product.name },
+            unit_amount: Math.round(totalAmount * 100),
           },
-          quantity: 1,
+          quantity: quantity || 1,
         },
       ],
       success_url: `${process.env.CLIENT_URL}/payment-success`,
       cancel_url: `${process.env.CLIENT_URL}/payment-failure`,
+      metadata: {
+        userId,
+        productId: product.id,
+        quantity: quantity || 1,
+      },
     });
 
-    res.json({ url: session.url }); // ✅ Send URL to frontend to redirect
+    res.json({ url: session.url });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Payment session failed" });
   }
 });
+
+// ✅ Stripe Webhook - must use raw body for signature verification
+router.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+    } catch (err) {
+      console.error("Webhook signature verification failed:", err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      const metadata = session.metadata;
+
+      // 1️⃣ Create Order
+      Order.create(
+        {
+          userId: metadata.userId,
+          productId: metadata.productId,
+          quantity: metadata.quantity,
+          totalPrice: session.amount_total / 100,
+          paymentMethod: session.payment_method_types[0],
+          status: "Paid",
+        },
+        (err, orderResult) => {
+          if (err) {
+            console.error("Order creation failed:", err);
+            return res.status(500).send("Order creation failed");
+          }
+
+          const orderId = orderResult.insertId;
+
+          // 2️⃣ Create Payment linked to the order
+          Payment.create(
+            {
+              orderId: orderId,
+              amount: session.amount_total / 100,
+              paymentMethod: session.payment_method_types[0],
+              status: "Paid",
+              transactionId: session.payment_intent,
+            },
+            (err2) => {
+              if (err2) {
+                console.error("Payment recording failed:", err2);
+                return res.status(500).send("Payment recording failed");
+              }
+
+              console.log("Order & Payment recorded successfully");
+              res.status(200).send("Webhook processed");
+            }
+          );
+        }
+      );
+    } else {
+      res.status(200).send("Event ignored");
+    }
+  }
+);
 
 module.exports = router;
