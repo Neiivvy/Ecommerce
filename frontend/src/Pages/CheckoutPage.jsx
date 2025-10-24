@@ -26,30 +26,30 @@ export function CheckoutPage() {
   const deliveryFee = 150;
   const total = product ? (Number(product.price) + deliveryFee).toFixed(2) : "0.00";
 
-  const handlePayment = async () => {
-    if (!product || !allFilled || loading) return;
+ const handlePayment = async () => {
+  if (!product || !allFilled || loading) return;
 
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/payments/create-checkout-session",
-        {
-          product,
-          totalAmount: Number(total),
-          userId: "2",       // ✅ hardcoded user ID for testing
-          productId: "1",    // ✅ hardcoded product ID for testing
-          quantity: 1,
-        }
-      );
-
-      if (response.data.url) {
-        window.location.href = response.data.url;
+  setLoading(true);
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/payments/create-checkout-session",
+      {
+        totalAmount: Number(total),
+        userId: "2",                   // ✅ hardcoded user ID for testing
+        productId: product.id || "1",  // ✅ send actual product ID, fallback to 1
+        productName: product.name || "Product", // ✅ for Stripe display
+        quantity: 1,                   // ✅ default quantity
       }
-    } catch (error) {
-      console.error("Payment failed", error);
-      setLoading(false);
+    );
+
+    if (response.data.url) {
+      window.location.href = response.data.url;
     }
-  };
+  } catch (error) {
+    console.error("Payment failed", error);
+    setLoading(false);
+  }
+};
 
   return (
     <div className="checkout-container">

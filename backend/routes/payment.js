@@ -9,7 +9,7 @@ const Order = require("../models/orderModel");
 // Create Stripe Checkout Session
 router.post("/create-checkout-session", async (req, res) => {
   try {
-    const { product, totalAmount, userId, quantity } = req.body;
+    const { totalAmount, userId, productId, productName, quantity } = req.body;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -18,7 +18,7 @@ router.post("/create-checkout-session", async (req, res) => {
         {
           price_data: {
             currency: "usd",
-            product_data: { name: product.name },
+            product_data: { name: productName }, // ✅ use name for Stripe display
             unit_amount: Math.round(totalAmount * 100),
           },
           quantity: quantity || 1,
@@ -27,18 +27,19 @@ router.post("/create-checkout-session", async (req, res) => {
       success_url: `${process.env.CLIENT_URL}/payment-success`,
       cancel_url: `${process.env.CLIENT_URL}/payment-failure`,
       metadata: {
-        userId,
-        productId: product.id,
-        quantity: quantity || 1,
+        userId,      // Stripe metadata automatically stores strings
+        productId,   // ✅ your product ID will be passed as-is
+        quantity,
       },
     });
 
     res.json({ url: session.url });
   } catch (error) {
-    console.error(error);
+    console.error("Stripe checkout session error:", error);
     res.status(500).json({ error: "Payment session failed" });
   }
 });
+
 
 // ✅ Stripe Webhook - must use raw body for signature verification
 router.post(
