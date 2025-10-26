@@ -15,12 +15,14 @@ export function CartPage() {
     return null;
   }
 
+  // Remove item manually from cart
   const handleRemove = async (productId) => {
     const removedItem = cart.find((item) => item.productId === productId);
     await removeFromCart(productId);
     if (removedItem) showToast(`${removedItem.name} removed from cart`, "error");
   };
 
+  // Navigate to checkout with selected product
   const handlePlaceOrder = (product) => {
     navigate("/checkout", { state: { product } });
   };

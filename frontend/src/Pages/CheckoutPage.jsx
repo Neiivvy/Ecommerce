@@ -1,14 +1,13 @@
 import { useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext"; // adjust path
+import { AuthContext } from "../context/AuthContext";
 import "./CheckoutPage.css";
 
 export function CheckoutPage() {
   const { state } = useLocation();
   const product = state?.product;
-  const { user } = useContext(AuthContext); // ✅ get logged-in user
-console.log("Checkout product object:", product);
+  const { user } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     fullname: "",
@@ -20,52 +19,57 @@ console.log("Checkout product object:", product);
   });
 
   const [loading, setLoading] = useState(false);
-  const allFilled = Object.values(formData).every((value) => value.trim() !== "");
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const allFilled = Object.values(formData).every((v) => v.trim() !== "");
 
   const deliveryFee = 150;
   const total = product ? (Number(product.price) + deliveryFee).toFixed(2) : "0.00";
 
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handlePayment = async () => {
-    if (!product || !allFilled || loading || !user) return; // ❌ check user exists
+ const handlePayment = async () => {
+  if (!product || !allFilled || loading || !user) return;
+  setLoading(true);
 
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/payments/create-checkout-session",
-        {
-          totalAmount: Number(total),
-          userId: user.id,             // ✅ actual logged-in user
-          productId: product.productId || product.cartId,      // ✅ actual product
-          productName: product.name,   // ✅ for Stripe display
-          quantity: 1,
-        }
-      );
-
-      if (response.data.url) {
-        window.location.href = response.data.url;
+  try {
+    // 1️⃣ Create Stripe Checkout Session
+    const response = await axios.post(
+      "http://localhost:5000/api/payments/create-checkout-session",
+      {
+        totalAmount: Number(total),
+        userId: user.id,
+        productId: product.productId,
+        productName: product.name,
+        quantity: product.quantity || 1,
+        cartId: product.cartId, // Pass cartId so webhook can remove it
       }
-    } catch (error) {
-      console.error("Payment failed", error);
-      setLoading(false);
+    );
+
+    // 2️⃣ Redirect to Stripe checkout
+    if (response.data.url) {
+      window.location.href = response.data.url;
     }
-  };
+  } catch (err) {
+    console.error("Payment session creation failed:", err);
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="checkout-container">
       <div className="checkout-form">
         <h2>Delivery Information</h2>
         <form>
-          <input type="text" name="fullname" placeholder="Full Name" value={formData.fullname} onChange={handleChange} />
-          <input type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} />
-          <input type="text" name="region" placeholder="Region" value={formData.region} onChange={handleChange} />
-          <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleChange} />
-          <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} />
-          <input type="text" name="area" placeholder="Area / Nearby Landmark" value={formData.area} onChange={handleChange} />
+          {["fullname", "phone", "region", "city", "address", "area"].map((name) => (
+            <input
+              key={name}
+              type="text"
+              name={name}
+              placeholder={name.charAt(0).toUpperCase() + name.slice(1)}
+              value={formData[name]}
+              onChange={handleChange}
+            />
+          ))}
         </form>
       </div>
 
@@ -90,7 +94,7 @@ console.log("Checkout product object:", product);
 
           <button
             className="proceed-btn"
-            disabled={!allFilled || loading || !user} // ❌ disable if no user
+            disabled={!allFilled || loading || !user}
             onClick={handlePayment}
           >
             {loading ? "Processing..." : "Proceed to Pay"}

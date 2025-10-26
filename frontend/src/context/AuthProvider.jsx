@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
     }
-     setLoadingUser(false);
+    setLoadingUser(false);
   }, []);
 
   // Fetch cart when user logs in
@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Remove from cart
+  // Remove from cart by productId
   const removeFromCart = async (productId) => {
     if (!user) return;
 
@@ -97,6 +97,11 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Failed to remove from cart", err);
     }
+  };
+
+  // Remove a specific cart item by cartId (used after placing order)
+  const removeCartItemByCartId = (cartId) => {
+    setCart((prev) => prev.filter((item) => item.cartId !== cartId));
   };
 
   // Logout
@@ -119,9 +124,10 @@ export const AuthProvider = ({ children }) => {
         cart,
         addToCart,
         removeFromCart,
+        removeCartItemByCartId, // ✅ new helper
         loadingUser,
         loadingCart,
-        cartCount, // derived
+        cartCount,
       }}
     >
       {children}

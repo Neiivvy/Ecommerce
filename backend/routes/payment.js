@@ -5,6 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const Payment = require("../models/paymentModel");
 const Order = require("../models/orderModel");
+const Cart = require("../models/cartModel");
 
 // Create Stripe Checkout Session
 router.post("/create-checkout-session", async (req, res) => {
@@ -18,7 +19,7 @@ router.post("/create-checkout-session", async (req, res) => {
         {
           price_data: {
             currency: "usd",
-            product_data: { name: productName }, // ✅ use name for Stripe display
+            product_data: { name: productName },
             unit_amount: Math.round(totalAmount * 100),
           },
           quantity: quantity || 1,
@@ -27,8 +28,8 @@ router.post("/create-checkout-session", async (req, res) => {
       success_url: `${process.env.CLIENT_URL}/payment-success`,
       cancel_url: `${process.env.CLIENT_URL}/payment-failure`,
       metadata: {
-        userId,      // Stripe metadata automatically stores strings
-        productId,   // ✅ your product ID will be passed as-is
+        userId,
+        productId,
         quantity,
       },
     });
@@ -40,8 +41,7 @@ router.post("/create-checkout-session", async (req, res) => {
   }
 });
 
-
-// ✅ Stripe Webhook - must use raw body for signature verification
+// Stripe Webhook - must use raw body for signature verification
 router.post(
   "/webhook",
   express.raw({ type: "application/json" }),
@@ -64,12 +64,16 @@ router.post(
       const session = event.data.object;
       const metadata = session.metadata;
 
+      const userId = metadata.userId;       // ✅ define userId
+      const productId = metadata.productId; // ✅ define productId
+      const quantity = metadata.quantity;
+
       // 1️⃣ Create Order
       Order.create(
         {
-          userId: metadata.userId,
-          productId: metadata.productId,
-          quantity: metadata.quantity,
+          userId,
+          productId,
+          quantity,
           totalPrice: session.amount_total / 100,
           paymentMethod: session.payment_method_types[0],
           status: "Paid",
@@ -82,10 +86,25 @@ router.post(
 
           const orderId = orderResult.insertId;
 
-          // 2️⃣ Create Payment linked to the order
+          // 2️⃣ Remove item from cart
+          Cart.getCartByUser(userId, (err2, cartItems) => {
+            if (err2) {
+              console.error("Failed to fetch cart:", err2);
+            } else if (cartItems) {
+              const cartItem = cartItems.find((c) => c.productId == productId);
+              if (cartItem) {
+                Cart.removeItem(cartItem.id, (err3) => {
+                  if (err3) console.error("Cart removal failed:", err3);
+                  else console.log("Cart item removed after payment");
+                });
+              }
+            }
+          });
+
+          // 3️⃣ Create Payment linked to the order
           Payment.create(
             {
-              orderId: orderId,
+              orderId,
               amount: session.amount_total / 100,
               paymentMethod: session.payment_method_types[0],
               status: "Paid",

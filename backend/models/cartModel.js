@@ -12,13 +12,13 @@ const Cart = {
 
   getCartByUser: (userId, callback) => {
     db.query(
-      'SELECT cart.id,cart.productId, products.name, products.price, products.image, cart.quantity FROM cart JOIN products ON cart.productId = products.id WHERE cart.userId = ?',
+      'SELECT cart.id, cart.productId, products.name, products.price, products.image, cart.quantity FROM cart JOIN products ON cart.productId = products.id WHERE cart.userId = ?',
       [userId],
       callback
     );
   },
 
-   getCartCountByUser: (userId, callback) => {
+  getCartCountByUser: (userId, callback) => {
     db.query(
       'SELECT COALESCE(SUM(quantity), 0) AS count FROM cart WHERE userId = ?',
       [userId],
