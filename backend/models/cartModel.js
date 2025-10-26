@@ -12,7 +12,7 @@ const Cart = {
 
   getCartByUser: (userId, callback) => {
     db.query(
-      'SELECT cart.id, products.name, products.price, products.image, cart.quantity FROM cart JOIN products ON cart.productId = products.id WHERE cart.userId = ?',
+      'SELECT cart.id,cart.productId, products.name, products.price, products.image, cart.quantity FROM cart JOIN products ON cart.productId = products.id WHERE cart.userId = ?',
       [userId],
       callback
     );

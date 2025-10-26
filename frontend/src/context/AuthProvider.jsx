@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         const res = await axios.get(`http://localhost:5000/cart/${user.id}`);
         const cartWithIds = res.data.map((item) => ({
           cartId: item.id,
-          productId: item.productId || item.id,
+          productId: item.productId,
           name: item.name,
           price: item.price,
           image: item.image,
