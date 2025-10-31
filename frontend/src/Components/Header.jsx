@@ -24,7 +24,7 @@ export function Header({ searchTerm, setSearchTerm }) {
       <div className="left-section">
         <Link to="/" className="header-link">
           <img className="logo" src="images/logo-white.png" alt="Logo" />
-          <span className="logo-text">EKET</span>
+          <span className="logo-text">E Market</span>
         </Link>
       </div>
 
