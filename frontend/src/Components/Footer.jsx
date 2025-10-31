@@ -6,7 +6,7 @@ export function Footer() {
       <div className="footer-content">
         <p>&copy; 2025 My E-commerce Site. All Rights Reserved.</p>
         <p>
-          📧 Contact us:{" "}
+          Contact us:{" "}
           <a href="mailto:support@myecommerce.com">support@myecommerce.com</a>
         </p>
       </div>

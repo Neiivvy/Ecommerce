@@ -5,7 +5,6 @@
   padding-top: 4rem; /* extra top padding for navbar */
   font-family: 'Arial', sans-serif;
 }
-
 .orders-container h2 {
   text-align: center;
   margin-bottom: 2rem;
@@ -79,8 +78,19 @@
 .not-logged-in,
 .loading,
 .no-orders {
-  text-align: center;
   margin-top: 2rem;
   font-size: 1.1rem;
-  color: #666;
+  color:white;
+  border-radius:7%;
+  padding: 17px;
+ background-color: hsl(198, 31%, 31%);
+  width: 630px;
+  margin:20px;
+}
+.home-link{
+  color:white;
+
+}
+.home-link:hover{
+   color: rgb(98, 147, 98);
 }

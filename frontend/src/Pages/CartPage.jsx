@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ToastContext } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./CartPage.css";
 
 export function CartPage() {
@@ -29,11 +30,11 @@ export function CartPage() {
 
   return (
     <div className="cart-page">
-      <h2>{user.name}'s Shopping Cart 🛒</h2>
+      <h1>{user.name}'s Shopping Cart </h1>
 
       {cart.length === 0 ? (
         <p className="empty-cart">
-          Your cart is empty. Go to homepage and click “Add to Cart”.
+          Your cart is empty. Go to <Link to="/" className="home-link"> homepage </Link> and click “Add to Cart”.
         </p>
       ) : (
         <div className="cart-items">
