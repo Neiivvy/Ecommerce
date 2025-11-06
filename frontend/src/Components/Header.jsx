@@ -29,50 +29,53 @@ export function Header({ searchTerm, setSearchTerm }) {
       </div>
 
       <div className="middle-section">
-        <input
-          className="search-bar"
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="search-wrapper">
+          <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input
+            className="search-bar"
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="right-section">
         {user ? (
           <>
-            <Link className="header-item" to="/">
-              <span className="header-item">
-                <img src={userIcon} className="icon" alt="User" />
-                Hello, {user.name}
-              </span>
+            <Link className="header-item user-greeting" to="/">
+              <img src={userIcon} className="icon" alt="User" />
+              <span className="user-name">Hello, {user.name}</span>
             </Link>
             <button className="header-item logout-btn" onClick={logout}>
               Logout
             </button>
           </>
         ) : (
-          <Link className="header-item" to="/login">
+          <Link className="header-item login-btn" to="/login">
             <img src={userIcon} className="icon" alt="Login" />
-            Login / Sign Up
+             <span>Login</span>
           </Link>
         )}
 
         <span
-          className="header-item clickable"
+          className="header-item"
           onClick={() => handleProtectedClick("/orders")}
         >
           <img src={ordersIcon} className="icon" alt="Orders" />
-          Orders
+          <span>Orders</span>
         </span>
 
         <span
-          className="header-item clickable cart-link"
+          className="header-item cart-link"
           onClick={() => handleProtectedClick("/cart")}
-          style={{ position: "relative" }}
         >
           <img src={cartIcon} className="icon" alt="Cart" />
-          Cart
+          <span>Cart</span>
           {user && cartCount > 0 && (
             <span className="cart-badge">{cartCount}</span>
           )}
