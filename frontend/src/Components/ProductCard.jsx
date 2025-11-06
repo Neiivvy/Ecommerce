@@ -53,4 +53,4 @@ export const ProductCard = ({ product, cart }) => {
       </div>
     </div>
   );
-};
+}

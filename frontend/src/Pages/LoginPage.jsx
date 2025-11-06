@@ -120,8 +120,8 @@ export function LoginPage() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-   setSuccessMessage(isSignup ? "Signup successful!" : "Login successful!");
-navigate("/");
+      setSuccessMessage(isSignup ? "Signup successful!" : "Login successful!");
+      navigate("/");
 
     } catch (err) {
       console.error(err);
@@ -132,82 +132,111 @@ navigate("/");
 
   return (
     <div className="login-page">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>{isSignup ? "Sign Up" : "Login"}</h2>
-
-        {isSignup && (
-          <div>
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={signupName}
-              onChange={(e) => {
-                setSignupName(e.target.value);
-                setSignupErrors((prev) => ({ ...prev, name: "" }));
-              }}
-              onBlur={(e) => validateField("signup", "name", e.target.value)}
-            />
-            {signupErrors.name && <p className="error">{signupErrors.name}</p>}
+      <div className="login-container">
+        <div className="login-header">
+          <div className="login-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
           </div>
-        )}
-
-        <div>
-          <input
-            type="email"
-            placeholder="Email"
-            value={isSignup ? signupEmail : loginEmail}
-            onChange={(e) => {
-              if (isSignup) {
-                setSignupEmail(e.target.value);
-                setSignupErrors((prev) => ({ ...prev, email: "" }));
-              } else {
-                setLoginEmail(e.target.value);
-                setLoginErrors((prev) => ({ ...prev, email: "" }));
-              }
-            }}
-            onBlur={(e) => validateField(isSignup ? "signup" : "login", "email", e.target.value)}
-          />
-          {(isSignup ? signupErrors.email : loginErrors.email) && (
-            <p className="error">{isSignup ? signupErrors.email : loginErrors.email}</p>
-          )}
+          <h2>{isSignup ? "Create Account" : "Welcome Back"}</h2>
+          <p className="login-subtitle">
+            {isSignup ? "Sign up to get started" : "Login to continue shopping"}
+          </p>
         </div>
 
-        <div>
-          <input
-            type="password"
-            placeholder="Password"
-            value={isSignup ? signupPassword : loginPassword}
-            onChange={(e) => {
-              if (isSignup) {
-                setSignupPassword(e.target.value);
-                setSignupErrors((prev) => ({ ...prev, password: "" }));
-              } else {
-                setLoginPassword(e.target.value);
-                setLoginErrors((prev) => ({ ...prev, password: "" }));
-              }
-            }}
-            onBlur={(e) => validateField(isSignup ? "signup" : "login", "password", e.target.value)}
-          />
-          {(isSignup ? signupErrors.password : loginErrors.password) && (
-            <p className="error">{isSignup ? signupErrors.password : loginErrors.password}</p>
+        <form className="login-form" onSubmit={handleSubmit}>
+          {isSignup && (
+            <div className="input-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                placeholder="Enter your full name"
+                value={signupName}
+                onChange={(e) => {
+                  setSignupName(e.target.value);
+                  setSignupErrors((prev) => ({ ...prev, name: "" }));
+                }}
+                onBlur={(e) => validateField("signup", "name", e.target.value)}
+                className={signupErrors.name ? "error-input" : ""}
+              />
+              {signupErrors.name && <p className="error">{signupErrors.name}</p>}
+            </div>
           )}
-        </div>
 
-        {(isSignup ? signupErrors.general : loginErrors.general) && (
-          <p className="error">{isSignup ? signupErrors.general : loginErrors.general}</p>
-        )}
+          <div className="input-group">
+            <label>Email Address</label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={isSignup ? signupEmail : loginEmail}
+              onChange={(e) => {
+                if (isSignup) {
+                  setSignupEmail(e.target.value);
+                  setSignupErrors((prev) => ({ ...prev, email: "" }));
+                } else {
+                  setLoginEmail(e.target.value);
+                  setLoginErrors((prev) => ({ ...prev, email: "" }));
+                }
+              }}
+              onBlur={(e) => validateField(isSignup ? "signup" : "login", "email", e.target.value)}
+              className={(isSignup ? signupErrors.email : loginErrors.email) ? "error-input" : ""}
+            />
+            {(isSignup ? signupErrors.email : loginErrors.email) && (
+              <p className="error">{isSignup ? signupErrors.email : loginErrors.email}</p>
+            )}
+          </div>
 
-        {successMessage && <p className="success">{successMessage}</p>}
+          <div className="input-group">
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={isSignup ? signupPassword : loginPassword}
+              onChange={(e) => {
+                if (isSignup) {
+                  setSignupPassword(e.target.value);
+                  setSignupErrors((prev) => ({ ...prev, password: "" }));
+                } else {
+                  setLoginPassword(e.target.value);
+                  setLoginErrors((prev) => ({ ...prev, password: "" }));
+                }
+              }}
+              onBlur={(e) => validateField(isSignup ? "signup" : "login", "password", e.target.value)}
+              className={(isSignup ? signupErrors.password : loginErrors.password) ? "error-input" : ""}
+            />
+            {(isSignup ? signupErrors.password : loginErrors.password) && (
+              <p className="error">{isSignup ? signupErrors.password : loginErrors.password}</p>
+            )}
+          </div>
 
-        <button type="submit">{isSignup ? "Sign Up" : "Login"}</button>
+          {(isSignup ? signupErrors.general : loginErrors.general) && (
+            <div className="error-box">
+              <p className="error">{isSignup ? signupErrors.general : loginErrors.general}</p>
+            </div>
+          )}
 
-        <p className="toggle-link">
-          {isSignup ? "Already have an account?" : "Don't have an account?"}{" "}
-          <span onClick={() => setIsSignup(!isSignup)}>
-            {isSignup ? "Login" : "Sign Up"}
-          </span>
-        </p>
-      </form>
+          {successMessage && (
+            <div className="success-box">
+              <p className="success">{successMessage}</p>
+            </div>
+          )}
+
+          <button type="submit" className="submit-btn">
+            {isSignup ? "Sign Up" : "Login"}
+          </button>
+
+          <div className="toggle-link">
+            <span className="toggle-text">
+              {isSignup ? "Already have an account?" : "Don't have an account?"}
+            </span>{" "}
+            <span className="toggle-action" onClick={() => setIsSignup(!isSignup)}>
+              {isSignup ? "Login" : "Sign Up"}
+            </span>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

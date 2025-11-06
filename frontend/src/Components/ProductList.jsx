@@ -31,4 +31,4 @@ export const ProductList = ({ searchTerm }) => {
       )}
     </div>
   );
-};
+}

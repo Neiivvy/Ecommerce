@@ -6,11 +6,9 @@ export function SuccessPage() {
   return (
     <div className="success-container">
       <div className="success-box">
-        <h2>Payment Successful 🎉</h2>
-        <p>
-          Thank you for your order! Your payment has been processed
-          successfully.
-        </p>
+        <div className="success-icon">✔</div>
+        <h2>Payment Successful</h2>
+        <p>Your payment has been processed successfully. Thank you for your order!</p>
         <div className="success-buttons">
           <Link to="/" className="proceed-btn">
             Go to Home
