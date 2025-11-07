@@ -11,7 +11,7 @@
 .checkout-form, .checkout-summary {
   flex: 1;
   min-width: 300px;
-  background: #ffffff;
+  background: linear-gradient(10deg, #a0cddd 50%, #f9fdff 100%);
   border-radius: 12px;
   padding: 25px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
@@ -112,7 +112,7 @@
 .proceed-btn {
   margin-top: 1rem;
   width: 100%;
-  background-color: #0066cc;
+  background-color:#09543d; 
   color: white;
   border: none;
   padding: 14px;
@@ -128,7 +128,7 @@
 }
 
 .proceed-btn:hover:not(:disabled) {
-  background-color: #3b8eea;
+  background-color:#277b62;;
 }
 
 @media (max-width: 768px) {
