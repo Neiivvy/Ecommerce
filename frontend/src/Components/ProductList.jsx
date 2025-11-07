@@ -23,7 +23,7 @@ export const ProductList = ({ searchTerm }) => {
   return (
     <div className={`product-list ${products.length === 0 ? "empty" : ""}`}>
       {products.length === 0 ? (
-        <p className="no-products">No products found.</p>
+        <p className="no-products">No products Yet.</p>
       ) : (
         products.map((product) => (
           <ProductCard key={product.id} product={product} cart={cart} /> // pass cart as prop
