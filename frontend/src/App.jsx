@@ -7,6 +7,7 @@ import { CheckoutPage } from "./Pages/CheckoutPage";
 import { SuccessPage } from "./Pages/SuccessPage";
 import { FailurePage } from "./Pages/FailurePage";
 import { Header } from "./Components/Header";
+import { AdminDashboard } from "./Pages/AdminDashboard"; // <- import AdminDashboard
 import { ToastProvider } from "./context/ToastProvider";
 import { AuthProvider } from "./context/AuthProvider";
 import { ProtectedRoute } from "./Components/ProtectedRoute";
@@ -62,6 +63,9 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* Public Admin Dashboard route */}
+            <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </Router>
       </ToastProvider>
