@@ -61,7 +61,7 @@
   font-size: 2.2rem;
   font-weight: 700;
   margin: 0 0 0.5rem;
-    background: linear-gradient(90deg, #396270 50%, #172c36 100%);
+  background: linear-gradient(135deg, #277995 0%, #8cbdd2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -381,14 +381,38 @@
   }
 
   .order-body {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
-    padding: 1.25rem;
+    padding: 1rem;
+    gap: 1rem;
   }
 
   .order-image {
-    width: 100%;
-    height: 180px;
+    width: 100px;
+    height: 100px;
+  }
+
+  .order-details {
+    flex: 1;
+  }
+
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding: 0.3rem 0;
+  }
+
+  .detail-label {
+    font-size: 0.8rem;
+  }
+
+  .detail-value {
+    font-size: 0.9rem;
+  }
+
+  .detail-row.total .detail-value {
+    font-size: 1.1rem;
   }
 
   .message-wrapper {
@@ -407,5 +431,105 @@
 
   .no-orders {
     font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .orders-container {
+    padding: 0.75rem;
+    padding-top: 3.5rem;
+  }
+
+  .orders-header {
+    margin-bottom: 2rem;
+  }
+
+  .orders-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .orders-icon-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .orders-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .orders-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .order-card {
+    border-radius: 12px;
+  }
+
+  .order-header {
+    padding: 0.75rem;
+    gap: 0.6rem;
+  }
+
+  .order-id, .order-status-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .label {
+    font-size: 0.75rem;
+  }
+
+  .value {
+    font-size: 0.85rem;
+  }
+
+  .status {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .order-body {
+    flex-direction: row;
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .order-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+  }
+
+  .order-details {
+    gap: 0.4rem;
+  }
+
+  .detail-row {
+    padding: 0.2rem 0;
+  }
+
+  .detail-label {
+    font-size: 0.7rem;
+  }
+
+  .detail-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .detail-row.total {
+    padding-top: 0.5rem;
+    margin-top: 0.3rem;
+  }
+
+  .detail-row.total .detail-value {
+    font-size: 1rem;
+  }
+
+  .no-orders {
+    font-size: 0.9rem;
+    padding: 12px;
   }
 }

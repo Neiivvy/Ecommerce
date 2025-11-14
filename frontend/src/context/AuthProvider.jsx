@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }) => {
         cart,
         addToCart,
         removeFromCart,
-        removeCartItemByCartId, // ✅ new helper
+        removeCartItemByCartId, 
         loadingUser,
         loadingCart,
         cartCount,
