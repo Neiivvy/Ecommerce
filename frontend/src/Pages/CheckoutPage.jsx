@@ -33,7 +33,7 @@ export function CheckoutPage() {
   try {
     // 1️⃣ Create Stripe Checkout Session
     const response = await axios.post(
-      "http://localhost:5000/api/payments/create-checkout-session",
+      "https://ecommerce-2crf.onrender.com/api/payments/create-checkout-session",
       {
         totalAmount: Number(total),
         userId: user.id,
@@ -78,7 +78,7 @@ export function CheckoutPage() {
           <h3>Order Summary</h3>
           <div className="summary-item">
             <img
-              src={product.image ? `http://localhost:5000${product.image}` : "https://via.placeholder.com/100"}
+              src={product.image ? `https://ecommerce-2crf.onrender.com${product.image}` : "https://via.placeholder.com/100"}
               alt={product.name}
             />
             <div className="summary-info">

@@ -10,7 +10,7 @@ export const ProductCard = ({ product, cart }) => {
   const { showToast } = useContext(ToastContext);
 
   const imageSrc = product.image
-    ? `http://localhost:5000${product.image}`
+    ? `https://ecommerce-2crf.onrender.com${product.image}`
     : "https://via.placeholder.com/150";
 
   const inCart = cart.some((item) => item.productId === product.id); // check cart

@@ -94,8 +94,8 @@ export function LoginPage() {
 
     try {
       const url = isSignup
-        ? "http://localhost:5000/api/users/signup"
-        : "http://localhost:5000/api/users/login";
+        ? "https://ecommerce-2crf.onrender.com/api/users/signup"
+        : "https://ecommerce-2crf.onrender.com/api/users/login";
 
       const body = isSignup
         ? { name: signupName, email: signupEmail, password: signupPassword }

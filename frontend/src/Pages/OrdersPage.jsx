@@ -14,7 +14,7 @@ export function OrdersPage() {
 
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/orders/${user.id}`);
+        const res = await axios.get(`https://ecommerce-2crf.onrender.com/api/orders/${user.id}`);
         setOrders(res.data);
       } catch (err) {
         console.error("Failed to fetch orders:", err);
@@ -98,7 +98,7 @@ export function OrdersPage() {
               <div className="order-body">
                 <div className="order-image-wrapper">
                   <img
-                    src={order.image ? `http://localhost:5000${order.image}` : "https://via.placeholder.com/100"}
+                    src={order.image ? `https://ecommerce-2crf.onrender.com${order.image}` : "https://via.placeholder.com/100"}
                     alt={order.name}
                     className="order-image"
                   />

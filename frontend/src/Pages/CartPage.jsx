@@ -54,7 +54,7 @@ export function CartPage() {
                 <img
                   src={
                     product.image
-                      ? `http://localhost:5000${product.image}`
+                      ? `https://ecommerce-2crf.onrender.com${product.image}`
                       : "https://via.placeholder.com/100"
                   }
                   alt={product.name}

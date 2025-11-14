@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     const fetchCart = async () => {
       setLoadingCart(true);
       try {
-        const res = await axios.get(`http://localhost:5000/cart/${user.id}`);
+        const res = await axios.get(`https://ecommerce-2crf.onrender.com/cart/${user.id}`);
         const cartWithIds = res.data.map((item) => ({
           cartId: item.id,
           productId: item.productId,
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     if (exists) return;
 
     try {
-      const res = await axios.post("http://localhost:5000/cart", {
+      const res = await axios.post("https://ecommerce-2crf.onrender.com/cart", {
         userId: user.id,
         productId: product.id,
         quantity: 1,
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
     if (!cartItem) return;
 
     try {
-      await axios.delete(`http://localhost:5000/cart/${cartItem.cartId}`);
+      await axios.delete(`https://ecommerce-2crf.onrender.com/cart/${cartItem.cartId}`);
       setCart((prev) => prev.filter((item) => item.productId !== productId));
     } catch (err) {
       console.error("Failed to remove from cart", err);

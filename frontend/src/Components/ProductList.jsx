@@ -9,7 +9,7 @@ export const ProductList = ({ searchTerm }) => {
 
   useEffect(() => {
     const url = searchTerm
-      ? `http://localhost:5000/products/search?q=${encodeURIComponent(searchTerm)}`
+      ? `https://ecommerce-2crf.onrender.com/products/search?q=${encodeURIComponent(searchTerm)}`
       : "http://localhost:5000/products";
 
     fetch(url)
