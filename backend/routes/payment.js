@@ -64,8 +64,8 @@ router.post(
       const session = event.data.object;
       const metadata = session.metadata;
 
-      const userId = metadata.userId;       // ✅ define userId
-      const productId = metadata.productId; // ✅ define productId
+      const userId = metadata.userId;      
+      const productId = metadata.productId; 
       const quantity = metadata.quantity;
 
       // 1️⃣ Create Order
