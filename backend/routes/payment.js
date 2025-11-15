@@ -25,7 +25,7 @@ router.post("/create-checkout-session", async (req, res) => {
           quantity: quantity || 1,
         },
       ],
-      success_url: `${process.env.CLIENT_URL}/payment-success`,
+      success_url: `${process.env.CLIENT_URL}/payment-success`, //succcess page redirects
       cancel_url: `${process.env.CLIENT_URL}/payment-failure`,
       metadata: {
         userId,
