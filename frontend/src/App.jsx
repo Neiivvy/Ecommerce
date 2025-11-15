@@ -60,7 +60,7 @@ function App() {
               }
             />
 
-            {/* Public Admin Dashboard route */}
+           
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </Router>
