@@ -56,7 +56,7 @@ function App() {
               }
             />
             <Route
-              path="/payment-failed"
+              path="/payment-failure"
               element={
                 <ProtectedRoute>
                   <FailurePage />
