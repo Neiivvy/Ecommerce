@@ -9,8 +9,8 @@ export const ProductList = ({ searchTerm }) => {
 
   useEffect(() => {
     const url = searchTerm
-      ? `https://ecommerce-2crf.onrender.com/products/search?q=${encodeURIComponent(searchTerm)}`
-      : "http://localhost:5000/products";
+    ? `${import.meta.env.VITE_API_URL}/products/search?q=${encodeURIComponent(searchTerm)}`
+    : `${import.meta.env.VITE_API_URL}/products`;
 
     fetch(url)
       .then((res) => res.json())
